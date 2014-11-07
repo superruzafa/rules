@@ -38,6 +38,16 @@ abstract class Operator implements Expression, \Countable
         return $this;
     }
 
+    protected function checkOperandsCount($min = null, $max = null)
+    {
+        $count = count($this->operands);
+        if (!is_null($min) && $count < $min) {
+            throw new \LengthException(sprintf('%s needs at least %d operands', get_class($this), $min));
+        } elseif (!is_null($max) && $max < $count) {
+            throw new \LengthException(sprintf('%s needs as much %d operands', get_class($this), $max));
+        }
+    }
+
     /**
      * Gets the name of the operator
      *

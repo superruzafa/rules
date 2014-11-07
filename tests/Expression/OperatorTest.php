@@ -13,6 +13,28 @@ class OperatorTest extends ExpressionTestAbstract
     }
 
     /** @test */
+    public function tooFewOperands()
+    {
+        $object = new \ReflectionObject($this->operator);
+        $method = $object->getMethod('checkOperandsCount');
+        $method->setAccessible(true);
+        $this->setExpectedException('LengthException');
+        $this->operator->addOperand($this->getExpressionMock());
+        $method->invoke($this->operator, 2);
+    }
+
+    /** @test */
+    public function tooMuchOperands()
+    {
+        $object = new \ReflectionObject($this->operator);
+        $method = $object->getMethod('checkOperandsCount');
+        $method->setAccessible(true);
+        $this->setExpectedException('LengthException');
+        $this->operator->addOperand($this->getExpressionMock())->addOperand($this->getExpressionMock());
+        $method->invoke($this->operator, 0, 1);
+    }
+
+    /** @test */
     public function emptyOperator()
     {
         $this->assertCount(0, $this->operator);
