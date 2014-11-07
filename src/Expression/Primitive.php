@@ -2,6 +2,7 @@
 
 namespace Superruzafa\Rules\Expression;
 
+use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
 
 abstract class Primitive implements Expression
@@ -41,7 +42,7 @@ abstract class Primitive implements Expression
     abstract protected function doSetValue($value);
 
     /** {@inheritdoc} */
-    public function evaluate()
+    public function evaluate(Context $context = null)
     {
         return $this->value;
     }

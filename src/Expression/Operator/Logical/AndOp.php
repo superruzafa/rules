@@ -2,6 +2,7 @@
 
 namespace Superruzafa\Rules\Expression\Operator\Logical;
 
+use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
 use Superruzafa\Rules\Expression\Operator;
 use Superruzafa\Rules\Expression\Operator\OperatorException;
@@ -15,14 +16,14 @@ class AndOp extends Operator
     }
 
     /** {@inheritdoc} */
-    public function evaluate()
+    public function evaluate(Context $context = null)
     {
         if (count($this->operands) < 1) {
             throw new OperatorException('Logical And operator requires at least one operand');
         }
 
         foreach ($this->operands as $operand) {
-            if (!$operand->evaluate()) {
+            if (!$operand->evaluate($context)) {
                 return false;
             }
         }
