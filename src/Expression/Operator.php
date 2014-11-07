@@ -2,12 +2,29 @@
 
 namespace Superruzafa\Rules\Expression;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Superruzafa\Rules\Expression;
 
 abstract class Operator implements Expression, \Countable
 {
     /** @var Expression[] */
     protected $operands = array();
+
+    /**
+     * Creates a new Operator
+     *
+     * @param Expression $operand...
+     */
+    public function __construct()
+    {
+        $operands = func_get_args();
+        array_walk($operands, function($operand) {
+            if (!($operand instanceof Expression)) {
+                throw new InvalidArgumentException('Invalid operand');
+            }
+        });
+        $this->operands = $operands;
+    }
 
     /**
      * Adds an operand

@@ -19,13 +19,36 @@ class OperatorTest extends ExpressionTestAbstract
     }
 
     /** @test */
-    public function oneOperator()
+    public function invalidOperands()
+    {
+        $operand = $this->getExpressionMock();
+        $noOperand = new \stdClass();
+        $this->setExpectedException('InvalidArgumentException');
+        $this
+            ->getMockBuilder('Superruzafa\\Rules\\Expression\\Operator')
+            ->setConstructorArgs(array($operand, $operand, $noOperand, $operand))
+            ->getMockForAbstractClass();
+    }
+
+    /** @test */
+    public function validOperands()
+    {
+        $operand = $this->getExpressionMock();
+        $operator = $this
+            ->getMockBuilder('Superruzafa\\Rules\\Expression\\Operator')
+            ->setConstructorArgs(array($operand, $operand, $operand))
+            ->getMockForAbstractClass();
+        $this->assertCount(3, $operator);
+    }
+
+    /** @test */
+    public function oneOperand()
     {
         $this->assertCount(1, $this->operator->addOperand($this->getExpressionMock('foo')));
     }
 
     /** @test */
-    public function manyOperators()
+    public function manyOperands()
     {
         $operand = $this->getExpressionMock('foo');
         $this->operator

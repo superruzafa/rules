@@ -23,14 +23,14 @@ class AndOpTest extends ExpressionTestAbstract
     /** @test */
     public function valueWithNoOperands()
     {
-        $this->setExpectedException('Superruzafa\\Rules\\Expression\\Operator\\OperatorException');
+        $this->setExpectedException('RuntimeException');
         $this->operator->evaluate();
     }
 
     /** @test */
     public function codeWithNoOperands()
     {
-        $this->setExpectedException('Superruzafa\\Rules\\Expression\\Operator\\OperatorException');
+        $this->setExpectedException('RuntimeException');
         $this->operator->getNativeExpression();
     }
 
