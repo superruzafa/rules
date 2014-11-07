@@ -4,7 +4,7 @@ namespace Superruzafa\Rules\Expression\Primitive;
 
 class StringTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var String */
+    /** @var \Superruzafa\Rules\Expression\Primitive\String */
     private $primitive;
 
     protected function setUp()

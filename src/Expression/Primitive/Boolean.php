@@ -11,4 +11,24 @@ class Boolean extends Primitive
     {
         $this->value = (bool)$value;
     }
+
+    /**
+     * Creates a true Boolean expression
+     *
+     * @return \Superruzafa\Rules\Expression\Primitive\Boolean
+     */
+    public static function true()
+    {
+        return new Boolean(true);
+    }
+
+    /**
+     * Creates a false Boolean expression
+     *
+     * @return \Superruzafa\Rules\Expression\Primitive\Boolean
+     */
+    public static function false()
+    {
+        return new Boolean(false);
+    }
 }

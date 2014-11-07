@@ -4,7 +4,7 @@ namespace Superruzafa\Rules\Expression\Primitive;
 
 class BooleanTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Boolean */
+    /** @var \Superruzafa\Rules\Expression\Primitive\Boolean */
     private $primitive;
 
     protected function setUp()
@@ -84,5 +84,17 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     public function trueNativeExpression($value)
     {
         $this->assertSame('true', $this->primitive->setValue($value)->getNativeExpression());
+    }
+
+    /** @test */
+    public function trueBoolean()
+    {
+        $this->assertTrue(Boolean::true()->evaluate());
+    }
+
+    /** @test */
+    public function falseBoolean()
+    {
+        $this->assertFalse(Boolean::false()->evaluate());
     }
 }
