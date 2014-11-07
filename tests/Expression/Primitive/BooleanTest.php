@@ -5,11 +5,11 @@ namespace Superruzafa\Rules\Expression\Primitive;
 class BooleanTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Superruzafa\Rules\Expression\Primitive\Boolean */
-    private $primitive;
+    private $boolean;
 
     protected function setUp()
     {
-        $this->primitive = new Boolean();
+        $this->boolean = new Boolean();
     }
 
     public function falseProvider()
@@ -50,7 +50,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
      */
     public function falseValue($value)
     {
-        $this->assertFalse($this->primitive->setValue($value)->evaluate());
+        $this->assertFalse($this->boolean->setValue($value)->evaluate());
     }
 
     /**
@@ -61,7 +61,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
      */
     public function falseNativeExpression($value)
     {
-        $this->assertSame('false', $this->primitive->setValue($value)->getNativeExpression());
+        $this->assertSame('false', $this->boolean->setValue($value)->getNativeExpression());
     }
 
     /**
@@ -72,7 +72,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
      */
     public function trueValue($value)
     {
-        $this->assertTrue($this->primitive->setValue($value)->evaluate());
+        $this->assertTrue($this->boolean->setValue($value)->evaluate());
     }
 
     /**
@@ -83,7 +83,7 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
      */
     public function trueNativeExpression($value)
     {
-        $this->assertSame('true', $this->primitive->setValue($value)->getNativeExpression());
+        $this->assertSame('true', $this->boolean->setValue($value)->getNativeExpression());
     }
 
     /** @test */

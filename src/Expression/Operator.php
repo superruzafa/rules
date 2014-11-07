@@ -18,9 +18,9 @@ abstract class Operator implements Expression, \Countable
     public function __construct()
     {
         $operands = func_get_args();
-        array_walk($operands, function($operand) {
+        array_walk($operands, function(&$operand) {
             if (!($operand instanceof Expression)) {
-                throw new InvalidArgumentException('Invalid operand');
+                $operand = Primitive::create($operand);
             }
         });
         $this->operands = $operands;

@@ -2,8 +2,13 @@
 
 namespace Superruzafa\Rules\Expression;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
+use Superruzafa\Rules\Expression\Primitive\Boolean;
+use Superruzafa\Rules\Expression\Primitive\Float;
+use Superruzafa\Rules\Expression\Primitive\Integer;
+use Superruzafa\Rules\Expression\Primitive\String;
 
 abstract class Primitive implements Expression
 {
@@ -20,6 +25,26 @@ abstract class Primitive implements Expression
         if (!is_null($value)) {
             $this->setValue($value);
         }
+    }
+
+    /**
+     * Creates a new Primitive given a primitive type
+     *
+     * @param boolean|float|integer|string $primitive
+     * @return Primitive
+     */
+    public static function create($primitive)
+    {
+        if (is_string($primitive)) {
+            return new String($primitive);
+        } elseif (is_int($primitive)) {
+            return new Integer($primitive);
+        } elseif (is_bool($primitive)) {
+            return new Boolean($primitive);
+        } elseif (is_float($primitive)) {
+            return new Float($primitive);
+        }
+        throw new InvalidArgumentException('Invalid primitive type');
     }
 
     /**
