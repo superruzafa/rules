@@ -15,10 +15,14 @@ class EqualTo extends Operator
     }
 
     /** {@inheritdoc} */
-    public function evaluate(Context $context = null)
+    protected function defineOperandsCount(&$min = 0, &$max = null)
     {
-        $this->checkOperandsCount(2);
+        $min = 2;
+    }
 
+    /** {@inheritdoc} */
+    protected function doEvaluate(Context $context = null)
+    {
         $i = 1;
         $limit = count($this->operands) - 1;
         $current = $this->operands[1]->evaluate($context);
@@ -34,10 +38,8 @@ class EqualTo extends Operator
     }
 
     /** {@inheritdoc} */
-    public function getNativeExpression()
+    protected function doGetNativeExpression()
     {
-        $this->checkOperandsCount(2);
-
         $operands = array_map(function(Expression $operand) {
             return $operand->getNativeExpression();
         }, $this->operands);

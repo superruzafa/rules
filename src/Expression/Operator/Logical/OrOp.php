@@ -6,8 +6,14 @@ use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
 use Superruzafa\Rules\Expression\Operator;
 
-class AndOp extends Operator
+class OrOp extends Operator
 {
+    /** {@inheritdoc} */
+    public function getName()
+    {
+        return 'or';
+    }
+
     /** {@inheritdoc} */
     protected function defineOperandsCount(&$min = 0, &$max = null)
     {
@@ -15,20 +21,14 @@ class AndOp extends Operator
     }
 
     /** {@inheritdoc} */
-    public function getName()
-    {
-        return 'and';
-    }
-
-    /** {@inheritdoc} */
     protected function doEvaluate(Context $context = null)
     {
         foreach ($this->operands as $operand) {
-            if (!$operand->evaluate($context)) {
-                return false;
+            if ((bool)$operand->evaluate($context)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /** {@inheritdoc} */
@@ -42,7 +42,7 @@ class AndOp extends Operator
         if (1 == count($operands)) {
             return $operands[0];
         } else {
-            return sprintf('(%s)', implode(' && ', $operands));
+            return sprintf('(%s)', implode(' || ', $operands));
         }
     }
 }

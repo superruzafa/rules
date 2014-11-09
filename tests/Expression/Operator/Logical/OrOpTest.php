@@ -4,56 +4,56 @@ namespace Superruzafa\Rules\Expression\Operator\Logical;
 
 use Superruzafa\Rules\Expression\ExpressionTestAbstract;
 
-class AndOpTest extends ExpressionTestAbstract
+class OrOpTest extends ExpressionTestAbstract
 {
-    /** @var AndOp */
-    private $and;
+    /** @var OrOp */
+    private $or;
 
     protected function setUp()
     {
-        $this->and = new AndOp();
+        $this->or = new OrOp();
     }
 
     /** @test */
     public function name()
     {
-        $this->assertEquals('and', $this->and->getName());
+        $this->assertEquals('or', $this->or->getName());
     }
 
     /** @test */
     public function valueWithNoOperands()
     {
         $this->setExpectedException('LengthException');
-        $this->and->evaluate();
+        $this->or->evaluate();
     }
 
     /** @test */
     public function codeWithNoOperands()
     {
         $this->setExpectedException('LengthException');
-        $this->and->getNativeExpression();
+        $this->or->getNativeExpression();
     }
 
     /** @test */
     public function valueWithATrueOperand()
     {
-        $this->assertTrue($this->and->addOperand($this->getEvaluateMock(true))->evaluate());
+        $this->assertTrue($this->or->addOperand($this->getEvaluateMock(true))->evaluate());
     }
 
     /** @test */
     public function valueWithAFalseOperand()
     {
-        $this->assertFalse($this->and->addOperand($this->getEvaluateMock(false))->evaluate());
+        $this->assertFalse($this->or->addOperand($this->getEvaluateMock(false))->evaluate());
     }
 
     /** @test */
     public function valueWithSeveralOperandsBestCase()
     {
         $operand = $this->getEvaluateMock(
-            $this->onConsecutiveCalls(false, true, true, true, true),
+            $this->onConsecutiveCalls(true, false, false, false, false),
             $this->exactly(1)
         );
-        $result = $this->and
+        $result = $this->or
             ->addOperand($operand)
             ->addOperand($operand)
             ->addOperand($operand)
@@ -61,17 +61,17 @@ class AndOpTest extends ExpressionTestAbstract
             ->addOperand($operand)
             ->evaluate();
 
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 
     /** @test */
     public function valueWithSeveralOperandsWorstCase()
     {
         $operand = $this->getEvaluateMock(
-            $this->onConsecutiveCalls(true, true, true, true, false),
+            $this->onConsecutiveCalls(false, false, false, false, true),
             $this->exactly(5)
         );
-        $result = $this->and
+        $result = $this->or
             ->addOperand($operand)
             ->addOperand($operand)
             ->addOperand($operand)
@@ -79,39 +79,39 @@ class AndOpTest extends ExpressionTestAbstract
             ->addOperand($operand)
             ->evaluate();
 
-        $this->assertFalse($result);
+        $this->assertTrue($result);
     }
 
     /** @test */
     public function codeWithOneOperand()
     {
         $operand = $this->getNativeExpressionMock('EXPRESSION');
-        $this->and->addOperand($operand);
-        $this->assertEquals('EXPRESSION', $this->and->getNativeExpression());
+        $this->or->addOperand($operand);
+        $this->assertEquals('EXPRESSION', $this->or->getNativeExpression());
     }
 
     /** @test */
     public function codeWithSeveralEqualOperands()
     {
         $operand = $this->getNativeExpressionMock('EXPRESSION');
-        $this->and
+        $this->or
             ->addOperand($operand)
             ->addOperand($operand)
             ->addOperand($operand)
             ->addOperand($operand)
             ->addOperand($operand);
-        $this->assertEquals('EXPRESSION', $this->and->getNativeExpression());
+        $this->assertEquals('EXPRESSION', $this->or->getNativeExpression());
     }
 
     /** @test */
     public function codeWithSeveralOperands()
     {
-        $this->and
+        $this->or
             ->addOperand($this->getNativeExpressionMock('EXPRESSION1'))
             ->addOperand($this->getNativeExpressionMock('EXPRESSION2'))
             ->addOperand($this->getNativeExpressionMock('EXPRESSION3'))
             ->addOperand($this->getNativeExpressionMock('EXPRESSION2'))
             ->addOperand($this->getNativeExpressionMock('EXPRESSION1'));
-        $this->assertEquals('(EXPRESSION1 && EXPRESSION2 && EXPRESSION3)', $this->and->getNativeExpression());
+        $this->assertEquals('(EXPRESSION1 || EXPRESSION2 || EXPRESSION3)', $this->or->getNativeExpression());
     }
 }
