@@ -54,34 +54,132 @@ class RuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function executeRule()
+    public function performActionBeforeRule()
     {
-        $context = $this->getMock('Superruzafa\\Rules\\Context');
-        $rule = new Rule();
+        $context = new Context();
+
+        $action = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
+        $action
+            ->expects($this->once())
+            ->method('perform')
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                $context['before-rule'] = true;
+            }));
 
         $condition = $this->getMockForAbstractClass('Superruzafa\\Rules\\Expression', array('evaluate'));
         $condition
             ->expects($this->once())
             ->method('evaluate')
             ->with($context)
-            ->will($this->returnValue(true));
+            ->will($this->returnCallback(function (Context $context) {
+                \PHPUnit_Framework_Assert::assertTrue($context['before-rule']);
+            }));
+
+        $rule = new Rule();
+        $rule
+            ->setCondition($condition)
+            ->setAction($action, Rule::BEFORE_RULE)
+            ->execute($context);
+    }
+
+    /** @test */
+    public function performActionBeforeSubrules()
+    {
+        $context = new Context();
+
+        $condition = $this->getMockForAbstractClass('Superruzafa\\Rules\\Expression', array('evaluate'));
+        $condition
+            ->expects($this->once())
+            ->method('evaluate')
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                $context['before-subrule'] = true;
+                return true;
+            }));
 
         $action = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
         $action
             ->expects($this->once())
             ->method('perform')
-            ->with($context);
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                \PHPUnit_Framework_Assert::assertTrue($context['before-subrule']);
+            }));
 
-        $subRule = $this->getMock('Superruzafa\\Rules\\Rule', array('execute'));
-        $subRule
-            ->expects($this->once())
-            ->method('execute')
-            ->with($context);
-
+        $rule = new Rule();
         $rule
             ->setCondition($condition)
-            ->setAction($action)
-            ->appendRule($subRule)
+            ->setAction($action, Rule::BEFORE_SUBRULES)
+            ->execute($context);
+    }
+
+    /** @test */
+    public function performActionAfterSubrules()
+    {
+        $context = new Context();
+
+        $subruleAction = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
+        $subruleAction
+            ->expects($this->once())
+            ->method('perform')
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                $context['after-subrules'] = true;
+                return $context;
+            }));
+        $subrule = new Rule();
+        $subrule->setAction($subruleAction);
+
+        $action = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
+        $action
+            ->expects($this->once())
+            ->method('perform')
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                \PHPUnit_Framework_Assert::assertTrue($context->offsetExists('after-subrules'));
+            }));
+
+        $rule = new Rule();
+        $rule
+            ->setAction($action, Rule::AFTER_SUBRULES)
+            ->appendRule($subrule)
+            ->execute($context);
+    }
+
+    /** @test */
+    public function performActionAfterRule()
+    {
+        $context = new Context();
+
+        $condition = $this->getMockForAbstractClass('Superruzafa\\Rules\\Expression', array('evaluate'));
+        $condition
+            ->expects($this->once())
+            ->method('evaluate')
+            ->with($context)
+            ->will($this->returnValue(false));
+
+        $subruleAction = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
+        $subruleAction
+            ->expects($this->never())
+            ->method('perform');
+        $subrule = new Rule();
+        $subrule->setAction($subruleAction);
+
+        $action = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action', array('perform'));
+        $action
+            ->expects($this->once())
+            ->method('perform')
+            ->with($context)
+            ->will($this->returnCallback(function (Context $context) {
+                \PHPUnit_Framework_Assert::assertFalse($context->offsetExists('after-subrules'));
+            }));
+
+        $rule = new Rule();
+        $rule
+            ->setCondition($condition)
+            ->setAction($action, Rule::AFTER_RULE)
+            ->appendRule($subrule)
             ->execute($context);
     }
 }
