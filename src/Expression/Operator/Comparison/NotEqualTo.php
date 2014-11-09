@@ -6,12 +6,12 @@ use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
 use Superruzafa\Rules\Expression\Operator;
 
-class EqualTo extends Operator
+class NotEqualTo extends Operator
 {
     /** {@inheritdoc} */
     public function getName()
     {
-        return 'equalTo';
+        return 'notEqualTo';
     }
 
     /** {@inheritdoc} */
@@ -26,7 +26,7 @@ class EqualTo extends Operator
         return $this->binaryReduction(
             $context,
             function ($value1, $value2) {
-                return $value1 == $value2;
+                return $value1 != $value2;
             }
         );
     }
@@ -34,7 +34,7 @@ class EqualTo extends Operator
     /** {@inheritdoc} */
     protected function doGetNativeExpression()
     {
-        $operands = array_map(function(Expression $operand) {
+        $operands = array_map(function (Expression $operand) {
             return $operand->getNativeExpression();
         }, $this->operands);
 
@@ -42,15 +42,15 @@ class EqualTo extends Operator
 
         switch (count($operands)) {
             case 1:
-                return 'true';
+                return 'false';
             case 2:
-                return sprintf('(%s == %s)', $operands[0], $operands[1]);
+                return sprintf('(%s != %s)', $operands[0], $operands[1]);
             default:
                 $i = 0;
                 $limit = count($operands) - 1;
                 $subEqualTo = array();
                 while ($i < $limit) {
-                    $subEqualTo[] = sprintf('(%s == %s)', $operands[$i], $operands[$i + 1]);
+                    $subEqualTo[] = sprintf('(%s != %s)', $operands[$i], $operands[$i + 1]);
                     ++$i;
                 }
                 return sprintf('(%s)', implode(' && ', $subEqualTo));

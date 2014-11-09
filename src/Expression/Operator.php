@@ -2,7 +2,6 @@
 
 namespace Superruzafa\Rules\Expression;
 
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Expression;
 
@@ -80,6 +79,29 @@ abstract class Operator implements Expression, \Countable
      * @return mixed
      */
     abstract protected function doEvaluate(Context $context = null);
+
+    /**
+     * Reduces the operands to a single value by comparing pairs of operands at once
+     *
+     * @param Context $context
+     * @param $comparator
+     * @return boolean
+     */
+    protected function binaryReduction(Context $context = null, $comparator)
+    {
+        $i = 1;
+        $limit = count($this->operands) - 1;
+        $current = $this->operands[1]->evaluate($context);
+        $conditionSatisfied = $comparator($this->operands[0]->evaluate($context), $current);
+        while ($conditionSatisfied && $i < $limit) {
+            $previous = $current;
+            $current = $this->operands[$i]->evaluate($context);
+            $conditionSatisfied = $comparator($previous, $current);
+            ++$i;
+        }
+
+        return $conditionSatisfied;
+    }
 
     /** {@inheritdoc} */
     final public function getNativeExpression()
