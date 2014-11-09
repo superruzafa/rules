@@ -15,6 +15,12 @@ class NotOpTest extends ExpressionTestAbstract
     }
 
     /** @test */
+    public function name()
+    {
+        $this->assertEquals('not', $this->not->getName());
+    }
+
+    /** @test */
     public function evaluateTooFewOperands()
     {
         $this->setExpectedException('LengthException');
@@ -22,28 +28,39 @@ class NotOpTest extends ExpressionTestAbstract
     }
 
     /** @test */
-    public function evaluateTooMuchOperands()
+    public function evaluateAllTrueOperands()
     {
-        $this->setExpectedException('LengthException');
-        $operand = $this->getExpressionMock();
+        $operand = $this->getEvaluateMock(true);
         $this->not
             ->addOperand($operand)
             ->addOperand($operand)
-            ->evaluate();
+            ->addOperand($operand)
+            ->addOperand($operand);
+        $this->assertFalse($this->not->evaluate());
     }
 
     /** @test */
-    public function evaluateTrue()
-    {
-        $operand = $this->getEvaluateMock(true);
-        $this->assertFalse($this->not->addOperand($operand)->evaluate());
-    }
-
-    /** @test */
-    public function evaluateFalse()
+    public function evaluateAllFalseOperands()
     {
         $operand = $this->getEvaluateMock(false);
-        $this->assertTrue($this->not->addOperand($operand)->evaluate());
+        $this->not
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand);
+        $this->assertTrue($this->not->evaluate());
+    }
+
+    /** @test */
+    public function evaluateMixCaseOperands()
+    {
+        $operand = $this->getEvaluateMock($this->onConsecutiveCalls(false, false, false, true));
+        $this->not
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand);
+        $this->assertFalse($this->not->evaluate());
     }
 
     /** @test */
@@ -54,20 +71,22 @@ class NotOpTest extends ExpressionTestAbstract
     }
 
     /** @test */
-    public function codeTooMuchOperands()
+    public function codeOneOperand()
     {
-        $this->setExpectedException('LengthException');
-        $operand = $this->getExpressionMock();
-        $this->not
-            ->addOperand($operand)
-            ->addOperand($operand)
-            ->getNativeExpression();
+        $operand = $this->getNativeExpressionMock('EXP');
+        $this->assertEquals('(!EXP)', $this->not->addOperand($operand)->getNativeExpression());
     }
 
     /** @test */
-    public function getNativeExpression()
+    public function codeSeveralOperands()
     {
-        $operand = $this->getNativeExpressionMock('EXPRESSION');
-        $this->assertEquals('(!EXPRESSION)', $this->not->addOperand($operand)->getNativeExpression());
+        $operand = $this->getNativeExpressionMock($this->onConsecutiveCalls('EXP1', 'EXP2', 'EXP3', 'EXP2', 'EXP1'));
+        $this->not
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand)
+            ->addOperand($operand);
+        $this->assertEquals('(!(EXP1 || EXP2 || EXP3))', $this->not->getNativeExpression());
     }
 }
