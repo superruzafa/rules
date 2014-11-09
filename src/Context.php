@@ -4,8 +4,9 @@ namespace Superruzafa\Rules;
 
 use ArrayAccess;
 use Countable;
+use IteratorAggregate;
 
-class Context implements ArrayAccess, Countable
+class Context implements ArrayAccess, Countable, IteratorAggregate
 {
     /** @var array */
     private $context;
@@ -60,5 +61,11 @@ class Context implements ArrayAccess, Countable
     public function count()
     {
         return count($this->context);
+    }
+
+    /** {@inheritdoc} */
+    public function getIterator()
+    {
+        return new \ArrayObject($this->context);
     }
 }

@@ -87,4 +87,13 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $context->override(new Context(array('foo' => 'jarl')));
         $this->assertEquals('jarl', $context['foo']);
     }
+
+    /** @test */
+    public function iterator()
+    {
+        $context = new Context(array('foo' => 'bar'));
+        $iterator = $context->getIterator();
+        $this->assertInstanceOf('IteratorAggregate', $iterator);
+        $iterator->offsetExists('foo');
+    }
 }
