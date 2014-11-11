@@ -3,9 +3,12 @@
 namespace Superruzafa\Rules\Loader\Xml\OperatorParser;
 
 use RuntimeException;
-use Superruzafa\Rules\Expression\Operator\Comparison\EqualTo;
-use Superruzafa\Rules\Expression\Operator\Logical\AndOp;
 use Superruzafa\Rules\Loader\Xml\OperatorParser;
+use Superruzafa\Rules\Loader\Xml\OperatorParser\Comparison\EqualToParser;
+use Superruzafa\Rules\Loader\Xml\OperatorParser\Comparison\NotEqualToParser;
+use Superruzafa\Rules\Loader\Xml\OperatorParser\Logical\AndParser;
+use Superruzafa\Rules\Loader\Xml\OperatorParser\Logical\NotParser;
+use Superruzafa\Rules\Loader\Xml\OperatorParser\Logical\OrParser;
 
 class OperatorParserFactoryMethod
 {

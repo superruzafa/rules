@@ -1,6 +1,6 @@
 <?php
 
-namespace Superruzafa\Rules\Loader\Xml\OperatorParser;
+namespace Superruzafa\Rules\Loader\Xml\OperatorParser\Comparison;
 
 use Superruzafa\Rules\Expression\Operator\Comparison\EqualTo;
 use Superruzafa\Rules\Loader\Xml\OperatorParser;

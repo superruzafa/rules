@@ -1,6 +1,6 @@
 <?php
 
-namespace Superruzafa\Rules\Loader\Xml\OperatorParser;
+namespace Superruzafa\Rules\Loader\Xml\OperatorParser\Logical;
 
 use Superruzafa\Rules\Expression\Operator\Logical\OrOp;
 use Superruzafa\Rules\Loader\Xml\OperatorParser;
