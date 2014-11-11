@@ -19,6 +19,9 @@ class Rule
     /** @var string */
     const BEFORE_RULE       = 'before-rule';
 
+    /** @var string */
+    private $name = '';
+
     /** @var Expression */
     private $condition;
 
@@ -30,12 +33,6 @@ class Rule
 
     /** @var Rule[] */
     private $rules = array();
-
-    public function appendRule(Rule $rule, $stage = self::AFTER_SUBRULES)
-    {
-        $this->rules[$stage] = $rule;
-        return $this;
-    }
 
     /**
      * Creates a new Rule
@@ -56,6 +53,28 @@ class Rule
     }
 
     /**
+     * Gets the rule's name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets the rule's name
+     *
+     * @param string $name
+     * @return Rule
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
      * @return Action
      */
     public function getAction($stage = self::AFTER_SUBRULES)
@@ -72,9 +91,10 @@ class Rule
      */
     public function setAction(Action $action, $stage = self::AFTER_SUBRULES)
     {
-        if (array_key_exists($stage, $this->actionHooks)) {
-            $this->actionHooks[$stage] = $action;
+        if (!array_key_exists($stage, $this->actionHooks)) {
+            $stage = self::AFTER_SUBRULES;
         }
+        $this->actionHooks[$stage] = $action;
         return $this;
     }
 
@@ -93,6 +113,18 @@ class Rule
     public function setCondition(Expression $condition)
     {
         $this->condition = $condition;
+        return $this;
+    }
+
+    /**
+     * Appends a subrule to this rule
+     *
+     * @param Rule $rule
+     * @return Rule
+     */
+    public function appendRule(Rule $rule)
+    {
+        $this->rules[] = $rule;
         return $this;
     }
 
