@@ -3,28 +3,55 @@
 namespace Superruzafa\Rules\Loader\Xml\OperatorParser;
 
 use RuntimeException;
+use Superruzafa\Rules\Expression\Operator\Comparison\EqualTo;
+use Superruzafa\Rules\Expression\Operator\Logical\AndOp;
 use Superruzafa\Rules\Loader\Xml\OperatorParser;
 
 class OperatorParserFactoryMethod
 {
     /** @var OperatorParser[] */
-    private $pool = array();
+    private static $pool = array();
 
-    public function create(\DOMElement $actionElement)
+    /**
+     * Registers the built-in OperatorParser's
+     */
+    private static function registerBuiltInParsers()
     {
-        $operatorName = $actionElement->localName;
-        if (isset($this->pool[$operatorName])) {
-            return $this->pool[$operatorName];
+        if (empty(self::$pool)) {
+            self::registerParser(new AndParser);
+            self::registerParser(new OrParser);
+            self::registerParser(new NotParser);
+            self::registerParser(new EqualToParser);
+            self::registerParser(new NotEqualToParser);
         }
+    }
 
-        switch ($operatorName) {
-            case 'equalTo':
-                $parser = new EqualToParser();
-                break;
-            default:
-                throw new RuntimeException(sprintf('Unknown operator parser named "%s"', $operatorName));
+    /**
+     * Registers an user defined OperatorParser
+     *
+     * @param OperatorParser $operatorParser
+     */
+    public static function registerParser(OperatorParser $operatorParser)
+    {
+        self::$pool[$operatorParser->getElementName()] = $operatorParser;
+    }
+
+    /**
+     * Creates a parser given an XML element
+     *
+     * @param \DOMElement $operatorElement
+     * @return OperatorParser
+     */
+    public static function create(\DOMElement $operatorElement)
+    {
+        self::registerBuiltInParsers();
+
+        $operatorName = $operatorElement->localName;
+
+        if (!isset(self::$pool[$operatorName])) {
+            throw new RuntimeException(sprintf('Unknown operator parser named "%s"', $operatorName));
         }
+        return self::$pool[$operatorName];
 
-        return $this->pool[$operatorName] = $parser;
     }
 }
