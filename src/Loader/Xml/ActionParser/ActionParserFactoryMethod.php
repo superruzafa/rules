@@ -2,29 +2,35 @@
 
 namespace Superruzafa\Rules\Loader\Xml\ActionParser;
 
+use RuntimeException;
 use Superruzafa\Rules\Loader\Xml\ActionParser;
 
 class ActionParserFactoryMethod
 {
     /** @var ActionParser[] */
-    private $pool = array();
+    private static $pool = array();
 
-    public function create(\DOMElement $actionElement)
+    private static function registerBuiltInParsers()
     {
-        $type = $actionElement->getAttribute('type');
-        if (isset($this->pool[$type])) {
-            return $this->pool[$type];
+        if (empty(self::$pool)) {
+            self::registerParser(new FilterContextParser);
+            self::registerParser(new OverrideContextParser);
+            self::registerParser(new InterpolateContextParser);
         }
+    }
 
-        switch ($type) {
-            case 'filter-context':
-                $parser = new FilterContextParser();
-                break;
-            default:
-                $parser = new OverrideContextParser();
-                break;
+    private static function registerParser(ActionParser $actionParser)
+    {
+        self::$pool[$actionParser->getTypeName()] = $actionParser;
+    }
+
+    public function create($actionName)
+    {
+        self::registerBuiltInParsers();
+
+        if (!isset(self::$pool[$actionName])) {
+            throw new RuntimeException(sprintf('Unknown action parser named "%s"', $actionName));
         }
-
-        return $this->pool[$type] = $parser;
+        return self::$pool[$actionName];
     }
 }

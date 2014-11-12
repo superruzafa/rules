@@ -55,6 +55,5 @@ class OperatorParserFactoryMethod
             throw new RuntimeException(sprintf('Unknown operator parser named "%s"', $operatorName));
         }
         return self::$pool[$operatorName];
-
     }
 }

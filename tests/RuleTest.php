@@ -9,7 +9,10 @@ class RuleTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Rule();
         $this->assertTrue($rule->getCondition()->evaluate());
-        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction());
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::BEFORE_RULE));
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::BEFORE_SUBRULES));
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::AFTER_SUBRULES));
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::AFTER_RULE));
     }
 
     /** @test */
@@ -21,6 +24,10 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         $rule = new Rule($condition, $action);
         $this->assertSame($condition, $rule->getCondition());
         $this->assertSame($action, $rule->getAction());
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::BEFORE_RULE));
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::BEFORE_SUBRULES));
+        $this->assertSame($action, $rule->getAction(Rule::AFTER_SUBRULES));
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\NoAction', $rule->getAction(Rule::AFTER_RULE));
     }
 
     /** @test */
@@ -181,5 +188,24 @@ class RuleTest extends \PHPUnit_Framework_TestCase
             ->setAction($action, Rule::AFTER_RULE)
             ->appendRule($subrule)
             ->execute($context);
+    }
+
+    /** @test */
+    public function appendActions()
+    {
+        $action1 = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action');
+        $action2 = $this->getMockForAbstractClass('Superruzafa\\Rules\\Action');
+
+        $rule = new Rule();
+        $rule->appendAction($action1);
+        $this->assertSame($action1, $rule->getAction());
+
+        $rule->appendAction($action2);
+        $action = $rule->getAction();
+        $this->assertInstanceOf('Superruzafa\\Rules\\Action\\Sequence', $action);
+        $iterator = $action->getIterator();
+        $this->assertSame($action1, current($iterator));
+        next($iterator);
+        $this->assertSame($action2, current($iterator));
     }
 }

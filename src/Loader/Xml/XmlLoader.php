@@ -109,7 +109,8 @@ class XmlLoader
 
     private function parseActionElement(DOMElement $actionElement, Rule $rule)
     {
-        $actionParser = $this->actionParserFactoryMethod->create($actionElement);
+        $actionName = $actionElement->getAttribute('type') ?: 'override-context';
+        $actionParser = $this->actionParserFactoryMethod->create($actionName);
         $actionParser->parse($actionElement, $rule, $this->xpath);
     }
 }

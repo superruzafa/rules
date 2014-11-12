@@ -2,7 +2,6 @@
 
 namespace Superruzafa\Rules\Loader\Xml\ActionParser;
 
-use Superruzafa\Rules\Action\FilterContext;
 use Superruzafa\Rules\Action\OverrideContext;
 use Superruzafa\Rules\Context;
 use Superruzafa\Rules\Loader\Xml\ActionParser;
@@ -10,6 +9,11 @@ use Superruzafa\Rules\Rule;
 
 class OverrideContextParser implements ActionParser
 {
+    public function getTypeName()
+    {
+        return 'override-context';
+    }
+
     public function parse(\DOMElement $actionElement, Rule $rule, \DOMXPath $xpath)
     {
         $context = new Context();
@@ -19,7 +23,7 @@ class OverrideContextParser implements ActionParser
         }
 
         $action = new OverrideContext($context);
-        $rule->setAction($action, $actionElement->getAttribute('stage'));
+        $rule->appendAction($action, $actionElement->getAttribute('stage'));
         return $action;
     }
 }

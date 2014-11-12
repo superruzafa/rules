@@ -8,6 +8,11 @@ use Superruzafa\Rules\Rule;
 
 class FilterContextParser implements ActionParser
 {
+    public function getTypeName()
+    {
+        return 'filter-context';
+    }
+
     /** {@inheritdoc} */
     public function parse(\DOMElement $actionElement, Rule $rule, \DOMXPath $xpath)
     {
@@ -20,7 +25,7 @@ class FilterContextParser implements ActionParser
             $action->setMode(FilterContext::DISALLOW_KEYS);
         }
         $action->setKeys(array_filter(preg_split('/\s+/', $keys)));
-        $rule->setAction($action, $actionElement->getAttribute('stage'));
+        $rule->appendAction($action, $actionElement->getAttribute('stage'));
         return $action;
     }
 }
