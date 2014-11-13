@@ -1,6 +1,6 @@
 {
     "name": "superruzafa/rules",
-    "description": "A rule engine for condition -> action",
+    "description": "A rule engine following the condition -> action paradigm",
     "license": "MIT",
     "authors": [
         {
