@@ -136,6 +136,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function unneededInterpolation()
     {
         $context = new Context(array('variable' => 'BANG!'));
-        $this->assertEquals('>>><<<', $this->string->setValue('>>>{{ type }}<<<')->evaluate($context));
+        $this->assertEquals('>>><<<', $this->string->setValue('>>><<<')->evaluate($context));
     }
 }

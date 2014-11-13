@@ -2,10 +2,12 @@
 
 namespace Superruzafa\Rules\Action;
 
+use ArrayObject;
+use IteratorAggregate;
 use Superruzafa\Rules\Action;
 use Superruzafa\Rules\Context;
 
-class Sequence implements Action
+class Sequence implements Action, IteratorAggregate
 {
     /** @var Action[] */
     private $actions;
@@ -45,5 +47,11 @@ class Sequence implements Action
         {
             $action->perform($context);
         }
+    }
+
+    /** {@inheritdoc} */
+    public function getIterator()
+    {
+        return new ArrayObject($this->actions);
     }
 }

@@ -5,6 +5,7 @@ namespace Superruzafa\Rules;
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
+use Superruzafa\Template\ArrayTemplate;
 
 class Context implements ArrayAccess, Countable, IteratorAggregate
 {
@@ -30,6 +31,14 @@ class Context implements ArrayAccess, Countable, IteratorAggregate
     public function override(Context $context)
     {
         $this->context = array_merge($this->context, $context->context);
+        return $this;
+    }
+
+    public function interpolate(Context $context = null)
+    {
+        $context = $context ? $context->context : $this->context;
+        $template = new ArrayTemplate($this->context);
+        $this->context = $template->render($context);
         return $this;
     }
 
