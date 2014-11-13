@@ -5,7 +5,7 @@ namespace Superruzafa\Rules\Action;
 class OverrideContextTest extends \PHPUnit_Framework_TestCase
 {
     /** @test */
-    public function pepe()
+    public function overrideElements()
     {
         $overridingContext = $this->getMock('Superruzafa\\Rules\\Context');
         $overridingContext

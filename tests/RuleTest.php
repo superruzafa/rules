@@ -203,9 +203,8 @@ class RuleTest extends \PHPUnit_Framework_TestCase
         $rule->appendAction($action2);
         $action = $rule->getAction();
         $this->assertInstanceOf('Superruzafa\\Rules\\Action\\Sequence', $action);
-        $iterator = $action->getIterator();
-        $this->assertSame($action1, current($iterator));
-        next($iterator);
-        $this->assertSame($action2, current($iterator));
+        $actions = iterator_to_array($action);
+        $this->assertSame($action1, $actions[0]);
+        $this->assertSame($action2, $actions[1]);
     }
 }

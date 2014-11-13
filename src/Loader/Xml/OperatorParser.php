@@ -40,7 +40,7 @@ abstract class OperatorParser
 
         $nodes = $xpath->query(sprintf('*[namespace-uri() = "%s"]', XmlLoader::XMLNS_LOADER), $operatorElement);
         foreach ($nodes as $node) {
-            $parser = OperatorParserFactoryMethod::create($node);
+            $parser = OperatorParserFactoryMethod::create($node->localName);
             $operator->addOperand($parser->parse($node, $xpath));
         }
         return $operator;

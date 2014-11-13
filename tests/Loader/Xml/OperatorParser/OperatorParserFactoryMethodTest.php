@@ -3,7 +3,6 @@
 namespace Loader\Xml\OperatorParser;
 
 use Superruzafa\Rules\Loader\Xml\OperatorParser\OperatorParserFactoryMethod;
-use Superruzafa\Rules\Loader\Xml\XmlLoader;
 
 class OperatorParserFactoryMethodTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,7 +25,7 @@ class OperatorParserFactoryMethodTest extends \PHPUnit_Framework_TestCase
      */
     public function builtInOperatorParsersAreRegistered($elementName, $expectedOperatorParserClass)
     {
-        $operator = OperatorParserFactoryMethod::create($this->createElement($elementName));
+        $operator = OperatorParserFactoryMethod::create($elementName);
         $this->assertInstanceOf($expectedOperatorParserClass, $operator);
     }
 
@@ -34,7 +33,7 @@ class OperatorParserFactoryMethodTest extends \PHPUnit_Framework_TestCase
     public function unregisteredOperatorParser()
     {
         $this->setExpectedException('RuntimeException');
-        OperatorParserFactoryMethod::create($this->createElement('unregistered'));
+        OperatorParserFactoryMethod::create('unregistered');
     }
 
     /** @test */
@@ -45,22 +44,11 @@ class OperatorParserFactoryMethodTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('getElementName'))
             ->getMockForAbstractClass();
         $operatorParserMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getElementName')
             ->will($this->returnValue('JARL'));
         OperatorParserFactoryMethod::registerParser($operatorParserMock);
-        $this->assertSame($operatorParserMock, OperatorParserFactoryMethod::create($this->createElement('JARL')));
-    }
-
-    /**
-     * Creates an namespaced element
-     *
-     * @param string $name
-     * @return \DOMElement
-     */
-    private function createElement($name)
-    {
-        $doc = new \DOMDocument();
-        return $doc->createElementNS(XmlLoader::XMLNS_LOADER, $name);
+        $this->assertSame($operatorParserMock, OperatorParserFactoryMethod::create('JARL'));
+        OperatorParserFactoryMethod::unregisterParser($operatorParserMock);
     }
 }

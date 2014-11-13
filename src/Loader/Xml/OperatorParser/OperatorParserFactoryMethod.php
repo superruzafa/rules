@@ -20,12 +20,12 @@ class OperatorParserFactoryMethod
      */
     private static function registerBuiltInParsers()
     {
-        if (empty(self::$pool)) {
-            self::registerParser(new AndParser);
-            self::registerParser(new OrParser);
-            self::registerParser(new NotParser);
-            self::registerParser(new EqualToParser);
-            self::registerParser(new NotEqualToParser);
+        if (empty(self::$pool['built-in'])) {
+            self::doRegisterParser('built-it', new AndParser);
+            self::doRegisterParser('built-it', new OrParser);
+            self::doRegisterParser('built-it', new NotParser);
+            self::doRegisterParser('built-it', new EqualToParser);
+            self::doRegisterParser('built-it', new NotEqualToParser);
         }
     }
 
@@ -36,24 +36,45 @@ class OperatorParserFactoryMethod
      */
     public static function registerParser(OperatorParser $operatorParser)
     {
-        self::$pool[$operatorParser->getElementName()] = $operatorParser;
+        self::doRegisterParser('user', $operatorParser);
     }
 
     /**
-     * Creates a parser given an XML element
+     * Do the real register of an OperatorParser
      *
-     * @param \DOMElement $operatorElement
+     * @param string $category
+     * @param OperatorParser $operatorParser
+     */
+    private static function doRegisterParser($category, OperatorParser $operatorParser)
+    {
+        self::$pool[$category][$operatorParser->getElementName()] = $operatorParser;
+    }
+
+    /**
+     * Unregisters an user defined OperatorParser
+     *
+     * @param OperatorParser $operatorParser
+     */
+    public static function unregisterParser(OperatorParser $operatorParser)
+    {
+        unset(self::$pool['user'][$operatorParser->getElementName()]);
+    }
+
+    /**
+     * Creates an OperatorParser given its name
+     *
+     * @param string $operatorName
      * @return OperatorParser
      */
-    public static function create(\DOMElement $operatorElement)
+    public static function create($operatorName)
     {
         self::registerBuiltInParsers();
 
-        $operatorName = $operatorElement->localName;
-
-        if (!isset(self::$pool[$operatorName])) {
-            throw new RuntimeException(sprintf('Unknown operator parser named "%s"', $operatorName));
+        if (isset(self::$pool['user'][$operatorName])) {
+            return self::$pool['user'][$operatorName];
+        } elseif (isset(self::$pool['built-it'][$operatorName])) {
+            return self::$pool['built-it'][$operatorName];
         }
-        return self::$pool[$operatorName];
+        throw new RuntimeException(sprintf('Unknown operator parser named "%s"', $operatorName));
     }
 }

@@ -76,6 +76,7 @@ class Rule
     }
 
     /**
+     * @param string $stage
      * @return Action
      */
     public function getAction($stage = self::AFTER_SUBRULES)

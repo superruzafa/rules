@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "76150d6af2e22e9309a0727f47d892ee",
+    "hash": "0a4fc613680908c669c2c907aab4c8fb",
     "packages": [
         {
             "name": "superruzafa/template",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/superruzafa/template.git",
-                "reference": "41d20377d7d3a4f7e72c54b862fb25758ce5a71b"
+                "reference": "6118b7411c2efc90e9e4ef814c63589304c83d43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/superruzafa/template/zipball/41d20377d7d3a4f7e72c54b862fb25758ce5a71b",
-                "reference": "41d20377d7d3a4f7e72c54b862fb25758ce5a71b",
+                "url": "https://api.github.com/repos/superruzafa/template/zipball/6118b7411c2efc90e9e4ef814c63589304c83d43",
+                "reference": "6118b7411c2efc90e9e4ef814c63589304c83d43",
                 "shasum": ""
             },
             "require": {
@@ -32,11 +32,7 @@
                     "Superruzafa\\Template\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Superruzafa\\Template\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -46,17 +42,13 @@
                     "email": "superruzafa@gmail.com"
                 }
             ],
-            "description": "Recursive template engine",
+            "description": "A simple, recursive template engine",
             "keywords": [
                 "engine",
                 "recursive",
                 "template"
             ],
-            "support": {
-                "source": "https://github.com/superruzafa/template/tree/master",
-                "issues": "https://github.com/superruzafa/template/issues"
-            },
-            "time": "2014-11-08 16:38:15"
+            "time": "2014-11-12 21:11:25"
         }
     ],
     "packages-dev": [
@@ -806,9 +798,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "superruzafa/template": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "platform": {
         "php": ">=5.3"

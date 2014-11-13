@@ -17,18 +17,10 @@ class XmlLoader
 {
     const XMLNS_LOADER = 'https://github.com/superruzafa/rules/schemas/loader';
 
-    /** @var OperatorParserFactoryMethod */
-    private $operatorParserFactoryMethod;
-
-    /** @var ActionParserFactoryMethod */
-    private $actionParserFactoryMethod;
-
     public function __construct(DOMDocument $doc)
     {
         $this->xpath = new DOMXPath($doc);
         $this->xpath->registerNamespace('r', self::XMLNS_LOADER);
-        $this->operatorParserFactoryMethod = new OperatorParserFactoryMethod();
-        $this->actionParserFactoryMethod = new ActionParserFactoryMethod();
     }
 
     public function load()
@@ -90,7 +82,7 @@ class XmlLoader
         $operatorElements = $this->xpath->query(sprintf('*[namespace-uri() = "%s"]', self::XMLNS_LOADER), $conditionElement);
         $operators = array();
         foreach ($operatorElements as $operatorElement) {
-            $operatorParser = $this->operatorParserFactoryMethod->create($operatorElement);
+            $operatorParser = OperatorParserFactoryMethod::create($operatorElement->localName);
             $operators[] = $operatorParser->parse($operatorElement, $this->xpath);
         }
         switch (count($operators)) {
@@ -110,7 +102,7 @@ class XmlLoader
     private function parseActionElement(DOMElement $actionElement, Rule $rule)
     {
         $actionName = $actionElement->getAttribute('type') ?: 'override-context';
-        $actionParser = $this->actionParserFactoryMethod->create($actionName);
+        $actionParser = ActionParserFactoryMethod::create($actionName);
         $actionParser->parse($actionElement, $rule, $this->xpath);
     }
 }

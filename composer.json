@@ -8,15 +8,9 @@
             "email": "superruzafa@gmail.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/superruzafa/template.git"
-        }
-    ],
     "require": {
         "php": ">=5.3",
-        "superruzafa/template": "dev-master"
+        "superruzafa/template": "~1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.3"
