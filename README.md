@@ -1,6 +1,8 @@
 Rules
 =====
 
+[![Build Status](https://travis-ci.org/superruzafa/rules.svg?branch=master)](https://travis-ci.org/superruzafa/rules)
+
 A rule engine following the condition -> action paradigm
 
 What a rule is?

@@ -21,6 +21,8 @@ class String extends Primitive
     {
         if (is_object($value) && !method_exists($value, '__toString')) {
             $this->value = get_class($value);
+        } elseif (is_array($value)) {
+            $this->value = 'Array';
         } else {
             $this->value = strval($value);
         }

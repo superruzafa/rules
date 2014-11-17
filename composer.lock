@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a4fc613680908c669c2c907aab4c8fb",
+    "hash": "3f76b6eddfd578b2cb76d2d3928a6a4e",
     "packages": [
         {
             "name": "superruzafa/template",
