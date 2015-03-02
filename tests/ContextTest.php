@@ -20,16 +20,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function setIndirectEntry()
-    {
-        $context = new Context();
-        $context['a']['b']['c'] = 'd';
-        $this->assertArrayHasKey('b', $context['a']);
-        $this->assertArrayHasKey('c', $context['a']['b']);
-        $this->assertEquals('d', $context['a']['b']['c']);
-    }
-
-    /** @test */
     public function overrideEntry()
     {
         $context = new Context();

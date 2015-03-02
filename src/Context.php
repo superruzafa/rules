@@ -51,7 +51,7 @@ class Context implements ArrayAccess, Countable, IteratorAggregate
     /** {@inheritdoc} */
     public function offsetGet($offset)
     {
-        return $this->context[$offset];
+	return isset($this->context[$offset]) ? $this->context[$offset] : null;
     }
 
     /** {@inheritdoc} */
